@@ -3,7 +3,7 @@ import pandas as pd
 from IPython import embed
 
 from fundamental_screener import (
-    download, parsers, metrics, writers, filters
+    download, parsers, metrics, writers, filters, screen_styles
 )
 
 DOWNLOAD_DIR = 'downloads'
@@ -26,48 +26,27 @@ if __name__ == '__main__':
 
             # Open snapshot file
             df = parsers.open_downloaded_data(filepath)
-            # Keep companies trading in the currency we are interested in.
-            df = filters.filter_non_british_currency(df)
 
-            # Convert anything in pence to pounds
-            df = metrics.pence_to_pounds(df)
+            # Set up dataframe to include apt. properties
+            df = parsers.set_up_dataframe(df)
 
-            # Calculate Greenblatt's Magic Formula ranking
-            df = metrics.magic_formula(df)
-            # Calculate Piotrovsky's F-Score
-            df = metrics.f_score(df)
-            # Calculate Altman Z-Score
-            df = metrics.z_score(df)
-
-            # Formatting some cols
-            df = df.rename(columns={'ROI - Return On Investments (%)': 'ROI'})
-            # Abbreviate contents
-            df['Industry name'] = df['Industry name'].apply(lambda x: str(x).split(' ')[0])
-
-            # A good return on capital
-            df = df[df['ROI'].apply(lambda x: x>=12)]
-            # A Price-to Earnings ratio that is not too large
-            df = df[df['PE ratio']<=10]
-            # A Price-to-Earnings Growth ratio not oo high
-            df = df[df['PEG factor'].apply(lambda x: 0.<x<=1.6)]
-            # A high Z-score indicates protection from bankruptcy
-            df = df[df['Z score']>=3]
-            # If the company pays a dividend this must not be too high
-            df = filters.filter_unfavourable_dividend_yield(df)
-            # If the company pays a dividend this must have a decent cover
-            df = filters.filter_unfavourable_dividend_cover(df)
-            # Avoid short term reversion to mean by making sure price is below a limit
-            df = filters.avoid_short_term_negative_reversion_to_mean(df)
-
-            # Store result with most informative rows first
-            display_cols = ['Name', 'Industry name', 'MF rank', 'Market cap. (m)', 'price_in_pounds', 'PE ratio', 'PEG factor', 'Dividend yield', 'Dividend cover', 'Z score', 'F score (p)', 'ROI']
-            writers.store_screen_result(df[display_cols + [c for c in df.columns if c not in display_cols]], RESULT_DIR, name)
+            # Perform a screen
+            dividend_screen = screen_styles.dividend_screener(df)
+            # Store the result to disk
+            writers.store_screen_result(dividend_screen, RESULT_DIR, f"{name}_dividend_screen")
 
             # If we have processed the latest data, keep note of this
             if name == latest:
+                latest_screens = {
+                    'dividend_screen': dividend_screen,
+                }
                 result = df.copy()
 
-    print(f"Latest result - {latest}:\n{result[display_cols]}")
+    print(f"Latest result - {latest}:")
+    for k, v in latest_screens.items():
+        print(k)
+        print(v)
+
     if INTERACTIVE:
         print("\nLatest data in an object called 'result'\n")
         embed()
