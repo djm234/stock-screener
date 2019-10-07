@@ -48,7 +48,7 @@ def f_score(df):
             if (row['Operations (m)']/row['Total assets (m)']) > row['Return On Assets (%)']:
                 score += 1
         return score
-    df['F score (p)'] = df.apply(lambda row: _f(row), axis=1)
+    df['F score(ish)'] = df.apply(lambda row: _f(row), axis=1)
     return df
 
 

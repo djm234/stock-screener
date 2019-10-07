@@ -42,10 +42,3 @@ def filter_unfavourable_dividend_cover(df):
         else:
             return False
     return df[df['Dividend cover'].apply(lambda x: _filter_cover(x))]
-
-
-def avoid_short_term_negative_reversion_to_mean(df):
-    return df[
-        (df['Pc Change from 180 days Open Price'].apply(lambda x: 0<x<=15)) |
-        (df['Pc Change from Qtr Open Price'].apply(lambda x: 0<x<=15))
-    ]

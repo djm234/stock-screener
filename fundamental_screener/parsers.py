@@ -4,6 +4,8 @@ import os
 
 from fundamental_screener import filters, metrics
 
+DISPLAY_COLS = ['Name', 'Industry name', 'MF rank', 'Market cap. (m)', 'price_in_pounds', 'PE ratio', 'PEG factor', 'Dividend yield', 'Dividend cover', 'Z score', 'F score(ish)', 'ROI']
+
 
 def find_files_in_dir(dirpath, extension='.csv'):
     return glob.glob(os.path.join(dirpath, f'*{extension}'))
@@ -30,7 +32,13 @@ def set_up_dataframe(df):
     df = metrics.z_score(df)
 
     # Formatting some cols
-    df = df.rename(columns={'ROI - Return On Investments (%)': 'ROI'})
+    df = df.rename(
+        columns={
+            'ROI - Return On Investments (%)': 'ROI',
+            'Pc Change from 180 days Open Price': 'RS 180',
+            'Pc Change from Qtr Open Price': 'RS 90',
+        }
+    )
     # Abbreviate contents
     df['Industry name'] = df['Industry name'].apply(lambda x: str(x).split(' ')[0])
-    return df
+    return df[DISPLAY_COLS + [c for c in df.columns if c not in DISPLAY_COLS]]
