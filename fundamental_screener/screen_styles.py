@@ -55,24 +55,27 @@ def momentum_screener(df):
 def quality_screener(df):
     df2 = df.copy()
     # A high Z-score indicates protection from bankruptcy
-    df2 = df2[df2['Z score']>=3]
+    df2 = df2[df2['Z score'] >= 3]
+    df2 = df2[df2['F score(ish)'] >= 2.5] # 2.5 because we don't have enough data to fully calculate
     return df2.sort_values(by='Z score', ascending=False)
 
 
-def QVM_screener(df):
+def cash_rich_screener(df):
     df2 = df.copy()
-    # Combines multiple styles
-    QVM = quality_screener(df2)
-    QVM = momentum_screener(QVM)
-    QVM = value_screener(QVM)
-    QVM = QVM.sort_values(by='MF rank', ascending=True)
-    return QVM
+    # High Return on Capital Employed means lots of cash
+    df2 = df2[df2['ROCE']>=10]
+    # Lots of cash compared to earnings per share
+    df2 = df2[(df2['Cash flow PS']/df2['Earnings PS - basic'])>=0.9]
+    return df2.sort_values(by='Z score', ascending=False)
 
 
 def stability_screener(df):
-
     # should be some calculation - e.g. curr price, minus 180 pc = start price. work out 90 day price pc
     # then make sure 90 pc is close to that pc
+    # We have 1, 3, and 5 year data too now
+    # Maybe find correlation betwwen the data = the final point is zero (today)
+    # So align points 5y, 3y, 1y, 180d, 90d, 0d, and make sure positive and correlated well
+    # Maybe this should come under 'long term memoentum'?
 
     df2 = df.copy()
 
@@ -105,6 +108,7 @@ SCREEN_CHOICES = {
     'momentum': momentum_screener,
     'quality': quality_screener,
     'stability': stability_screener,
+    'cash_rich': cash_rich_screener,
 }
 
 
@@ -112,6 +116,6 @@ def custom_screen(df, screens=[]):
     if (len(screens) == 0) or (len(set(screens).intersection(SCREEN_CHOICES.keys())) < len(screens)):
         print(f"Must enter selection of screens to use in sequence: {SCREEN_CHOICES.keys()}")
     df2 = df.copy()
-    for screen in screens:
-        df2 = SCREEN_CHOICES[screen](df2)
+    for screen_name in screens:
+        df2 = SCREEN_CHOICES[screen_name](df2)
     return df2.sort_values(by='MF rank')

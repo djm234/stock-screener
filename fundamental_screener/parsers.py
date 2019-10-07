@@ -37,6 +37,7 @@ def set_up_dataframe(df):
             'ROI - Return On Investments (%)': 'ROI',
             'Pc Change from 180 days Open Price': 'RS 180',
             'Pc Change from Qtr Open Price': 'RS 90',
+            'Return On Capital Employed (ROCE)': 'ROCE',
         }
     )
     # Abbreviate contents

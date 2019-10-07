@@ -56,9 +56,17 @@ if __name__ == '__main__':
             stability_screen = screen_styles.stability_screener(df)
             writers.store_screen_result(stability_screen, RESULT_DIR, f"{name}_stability_screen")
 
+            # Cash rich
+            cash_rich_screen = screen_styles.cash_rich_screener(df)
+            writers.store_screen_result(cash_rich_screen, RESULT_DIR, f"{name}_cash_rich_screen")
+
             # Custom Quality, Value, and Momentum screen
             QVM = screen_styles.custom_screen(df, screens=['quality', 'value', 'momentum'])
             writers.store_screen_result(QVM, RESULT_DIR, f"{name}_QVM")
+
+            # Custom Quality, Value, and Momentum screen
+            test = screen_styles.custom_screen(df, screens=['cash_rich', 'quality', 'value', 'dividend'])
+            writers.store_screen_result(test, RESULT_DIR, f"{name}_test")
 
             # If we have processed the latest data, keep note of this
             if name == latest:
@@ -69,8 +77,10 @@ if __name__ == '__main__':
                     'magic_formula_screen': magic_formula_screen,
                     'momentum_screen': momentum_screen,
                     'quality_screen': quality_screen,
-                    'QVM': QVM,
                     'stability_screen': stability_screen,
+                    'cash_rich_screen': cash_rich_screen,
+                    'QVM': QVM,
+                    'test': test,
                 }
                 # Store whole table
                 result = df.copy()
