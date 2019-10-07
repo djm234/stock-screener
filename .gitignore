@@ -1,6 +1,6 @@
 # Mine
-results/
-
+_results/
+_downloads/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

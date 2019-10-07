@@ -6,8 +6,8 @@ from fundamental_screener import (
     download, parsers, metrics, writers, filters, screen_styles
 )
 
-DOWNLOAD_DIR = 'downloads'
-RESULT_DIR = 'results'
+DOWNLOAD_DIR = '_downloads'
+RESULT_DIR = '_results'
 REPROCESS_ALL = True
 INTERACTIVE = True
 
