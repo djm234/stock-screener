@@ -64,9 +64,9 @@ if __name__ == '__main__':
             QVM = screen_styles.custom_screen(df, screens=['quality', 'value', 'momentum'])
             writers.store_screen_result(QVM, RESULT_DIR, f"{name}_QVM")
 
-            # Custom Quality, Value, and Momentum screen
-            test = screen_styles.custom_screen(df, screens=['cash_rich', 'quality', 'value', 'dividend'])
-            writers.store_screen_result(test, RESULT_DIR, f"{name}_test")
+            # Custom screen - retults screened in order
+            custom_screen = screen_styles.custom_screen(df, screens=['cash_rich', 'quality', 'value', 'dividend']).sort_values(by='Dividend yield', ascending=False)
+            writers.store_screen_result(custom_screen, RESULT_DIR, f"{name}_custom_screen")
 
             # If we have processed the latest data, keep note of this
             if name == latest:
@@ -80,7 +80,7 @@ if __name__ == '__main__':
                     'stability_screen': stability_screen,
                     'cash_rich_screen': cash_rich_screen,
                     'QVM': QVM,
-                    'test': test,
+                    'custom': custom_screen,
                 }
                 # Store whole table
                 result = df.copy()
@@ -93,7 +93,7 @@ if __name__ == '__main__':
             'Name', 'MF rank', 'Industry name', 'Market cap. (m)', 'price_in_pounds',
             'F score(ish)', 'Z score', 'PE ratio', 'PEG factor',
             'Dividend yield', 'Dividend cover',
-            'RS 180', 'RS 90'
+            'RS 180', 'RS 90', 'return_max'
         ]
         print(v[PRINT_COLS].head(top))
 

@@ -1,3 +1,8 @@
+def return_max(df):
+    # Calculate the highest return
+    df['return_max'] = df[['ROCE', 'ROI']].apply(lambda row: max(row), axis=1)
+    return df
+
 
 def magic_formula(df):
     # Greenblatts Magic Formula
@@ -5,7 +10,7 @@ def magic_formula(df):
     df = df.sort_values(by='Earnings Yield', ascending = False)
     df['earnings_rank_percentile'] = [(i/len(df))*100 for i in range(1,len(df)+1)]
     # Same for ROI (ROIC)
-    df = df.sort_values(by='ROI - Return On Investments (%)', ascending = False)
+    df = df.sort_values(by='ROI', ascending = False)
     df['ROI_rank_percentile'] = [(i/len(df))*100 for i in range(1,len(df)+1)]
     # Sum ranks of percentiles - those at top are highest ranks
     df['magic formula score'] = df['earnings_rank_percentile'] + df['ROI_rank_percentile']

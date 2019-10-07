@@ -11,12 +11,6 @@ def magic_formula_screener(df):
 
 def dividend_screener(df):
     df2 = df.copy()
-    # A good return on capital
-    df2 = df2[df2['ROI'].apply(lambda x: x>=12)]
-    # A Price-to Earnings ratio that is not too large
-    df2 = df2[df2['PE ratio']<=15]
-    # A Price-to-Earnings Growth ratio not oo high
-    df2 = df2[df2['PEG factor'].apply(lambda x: 0.<x<=2)]
     # If the company pays a dividend this must not be too high
     df2 = filters.filter_unfavourable_dividend_yield(df2)
     # If the company pays a dividend this must have a decent cover
@@ -29,11 +23,11 @@ def dividend_screener(df):
 def value_screener(df):
     df2 = df.copy()
     # A Price-to Earnings ratio that is not too large
-    df2 = df2[df2['PE ratio']<=10]
+    df2 = df2[df2['PE ratio'] <= 15]
     # A Price-to-Earnings Growth ratio not oo high
-    df2 = df2[df2['PEG factor'].apply(lambda x: 0.<x<=1)]
+    df2 = df2[df2['PEG factor'].apply(lambda x: 0. < x <= 2)]
     # Good value PTB
-    df2 = df2[df2['Price To Tangible Book Value']<=10]
+    df2 = df2[df2['Price To Tangible Book Value'] <= 10]
     # Sort so that most interesting companies are at the top
     df2 = df2.sort_values(by='PE ratio', ascending=True)
     return df2
@@ -63,10 +57,14 @@ def quality_screener(df):
 def cash_rich_screener(df):
     df2 = df.copy()
     # High Return on Capital Employed means lots of cash
-    df2 = df2[df2['ROCE']>=10]
+    #df2 = df2[df2['ROCE'] >= 10]
+    # High return on investment means lots of cash
+    #df2 = df2[df2['ROI'] >= 10]
+    # Return max is highest out of ROI and ROCE
+    df2 = df2[df2['return_max']>=10]
     # Lots of cash compared to earnings per share
-    df2 = df2[(df2['Cash flow PS']/df2['Earnings PS - basic'])>=0.9]
-    return df2.sort_values(by='Z score', ascending=False)
+    df2 = df2[(df2['Cash flow PS']/df2['Earnings PS - basic']) >= 0.8]
+    return df2.sort_values(by='return_max', ascending=False)
 
 
 def stability_screener(df):
