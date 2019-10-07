@@ -56,10 +56,6 @@ def quality_screener(df):
 
 def cash_rich_screener(df):
     df2 = df.copy()
-    # High Return on Capital Employed means lots of cash
-    #df2 = df2[df2['ROCE'] >= 10]
-    # High return on investment means lots of cash
-    #df2 = df2[df2['ROI'] >= 10]
     # Return max is highest out of ROI and ROCE
     df2 = df2[df2['return_max']>=10]
     # Lots of cash compared to earnings per share
