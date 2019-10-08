@@ -1,3 +1,6 @@
+from scipy.stats import linregress
+import numpy as np
+
 def return_max(df):
     # Calculate the highest return
     df['return_max'] = df[['ROCE', 'ROI']].apply(lambda row: max(row), axis=1)
@@ -92,3 +95,57 @@ def pence_to_pounds(df):
             raise AssertionError
     df['price_in_pounds'] = df.apply(lambda row: _convert_to_gbp(row), axis=1)
     return df
+
+
+def long_term_momentum(df):
+
+    def _linregress(row):
+        x = [0, 90, 180, 365, 365*3, 365*5]
+        y = [0, row['RS 90'], row['RS 180'], row['RS 1y'], row['RS 3y'], row['RS 5y']]
+        slope, intercept, r_value, p_value, std_err = linregress(x, y)
+        return {
+            'slope': slope,
+            'intercept': intercept,
+            'r_value': r_value,
+            'p_value': p_value,
+            'std_err': std_err,
+        }
+
+    df['linreg_long'] = df[['RS 90', 'RS 180', 'RS 1y', 'RS 3y', 'RS 5y']].apply(lambda row: _linregress(row), axis=1)
+    df['slope'] = df['linreg_long'].apply(lambda x: x['slope'])
+    df['r_value'] = df['linreg_long'].apply(lambda x: x['r_value'])
+    # greatest positive R2 score indicates upward consistent trend
+    df = df.sort_values(by=['r_value', 'slope'], ascending=[False, False])
+    df['lt_momentum_score'] = percentile_list(len(df))
+    del df['r_value']
+    del df['slope']
+    return df
+
+
+def short_term_momentum(df):
+
+    def _linregress(row):
+        x = [0, 90, 180, 365]
+        y = [0, row['RS 90'], row['RS 180'], row['RS 1y']]
+        slope, intercept, r_value, p_value, std_err = linregress(x, y)
+        return {
+            'slope': slope,
+            'intercept': intercept,
+            'r_value': r_value,
+            'p_value': p_value,
+            'std_err': std_err,
+        }
+
+    df['linreg_short'] = df[['RS 90', 'RS 180', 'RS 1y']].apply(lambda row: _linregress(row), axis=1)
+    df['slope'] = df['linreg_short'].apply(lambda x: x['slope'])
+    df['r_value'] = df['linreg_short'].apply(lambda x: x['r_value'])
+    # greatest positive R2 score indicates upward consistent trend
+    df = df.sort_values(by=['r_value', 'slope'], ascending=[False, False])
+    df['st_momentum_score'] = percentile_list(len(df))
+    del df['r_value']
+    del df['slope']
+    return df
+
+
+def percentile_list(n_items):
+    return np.linspace(100, 0, n_items)

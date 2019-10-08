@@ -8,7 +8,7 @@ from fundamental_screener import (
 
 DOWNLOAD_DIR = '_downloads'
 RESULT_DIR = '_results'
-REPROCESS_ALL = True
+REPROCESS_ALL = False
 INTERACTIVE = True
 
 if __name__ == '__main__':
@@ -93,7 +93,7 @@ if __name__ == '__main__':
             'Name', 'MF rank', 'Industry name', 'Market cap. (m)', 'price_in_pounds',
             'F score(ish)', 'Z score', 'PE ratio', 'PEG factor',
             'Dividend yield', 'Dividend cover',
-            'RS 180', 'RS 90', 'return_max'
+            'st_momentum_score', 'return_max'
         ]
         print(v[PRINT_COLS].head(top))
 

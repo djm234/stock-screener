@@ -35,14 +35,9 @@ def value_screener(df):
 
 def momentum_screener(df):
     df2 = df.copy()
-    # Price is greater than 180 days ago
-    df2 = df2[df2['RS 180'] > 0]
-    # Price is greater than 90 days ago
-    df2 = df2[df2['RS 90'] > 0]
-    # Price difference is greater than 180 days ago compared to now
-    df2 = df2[df2['RS 180'] > df2['RS 90']]
+    df2 = df2[(df2['lt_momentum_score'] >= 80) | (df2['st_momentum_score'] >= 80)]
     # Sort so that most interesting companies are at the top
-    df2 = df2.sort_values(by='RS 180', ascending=False)
+    df2 = df2.sort_values(by='st_momentum_score', ascending=False)
     return df2
 
 

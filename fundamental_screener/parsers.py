@@ -27,8 +27,11 @@ def set_up_dataframe(df):
     df = df.rename(
         columns={
             'ROI - Return On Investments (%)': 'ROI',
-            'Pc Change from 180 days Open Price': 'RS 180',
             'Pc Change from Qtr Open Price': 'RS 90',
+            'Pc Change from 180 days Open Price': 'RS 180',
+            'Pc Change from 1Yr Open Price': 'RS 1y',
+            'Pc Change from 3Yr Open Price': 'RS 3y',
+            'Pc Change from 5Yr Open Price': 'RS 5y',
             'Return On Capital Employed (ROCE)': 'ROCE',
         }
     )
@@ -45,6 +48,9 @@ def set_up_dataframe(df):
     df = metrics.z_score(df)
     # Add max return col (ROI and ROCE max)
     df = metrics.return_max(df)
+    # Add momentum cols
+    df = metrics.short_term_momentum(df)
+    df = metrics.long_term_momentum(df)
 
     # Abbreviate contents
     df['Industry name'] = df['Industry name'].apply(lambda x: str(x).split(' ')[0])
