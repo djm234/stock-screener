@@ -1,6 +1,4 @@
 import pandas as pd
-import pytest
-
 from hamcrest import (
     assert_that, equal_to
 )
@@ -30,7 +28,7 @@ def test_return_max():
     )
 
 
-def test_return_max():
+def test_magic_formula():
     df = pd.DataFrame().from_dict(
         {
             'Stock name': [
@@ -134,7 +132,6 @@ def test_f_score():
         }
     )
     result = metrics.f_score(df)
-    print('\n',result)
     assert_that(
         result['F score(ish)'].tolist(),
         equal_to(
@@ -186,7 +183,6 @@ def test_long_term_momentum():
         }
     )
     result = metrics.long_term_momentum(df)
-    print('\n',result)
     assert_that(
         result.iloc[0]['linreg_long'],
         equal_to(
@@ -199,6 +195,7 @@ def test_long_term_momentum():
             }
         )
     )
+
 
 def test_short_term_momentum():
     df = pd.DataFrame().from_dict(
@@ -221,7 +218,6 @@ def test_short_term_momentum():
         }
     )
     result = metrics.short_term_momentum(df)
-    print('\n',result.iloc[0]['linreg_short'])
     assert_that(
         result.iloc[0]['linreg_short'],
         equal_to(
@@ -234,6 +230,7 @@ def test_short_term_momentum():
             }
         )
     )
+
 
 def test_percentile_list():
     assert_that(

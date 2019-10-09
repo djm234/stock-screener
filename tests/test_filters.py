@@ -1,5 +1,4 @@
 import pandas as pd
-import pytest
 from hamcrest import (
     assert_that, contains_inanyorder
 )
@@ -43,7 +42,6 @@ def test_filter_unfavourable_dividend_yield():
             5
         )
     )
-
 
 
 def test_filter_unfavourable_dividend_cover():

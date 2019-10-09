@@ -1,9 +1,8 @@
 import os
-import pandas as pd
 from IPython import embed
 
 from fundamental_screener import (
-    download, parsers, metrics, writers, filters, screen_styles
+    download, parsers, writers, screen_styles
 )
 
 DOWNLOAD_DIR = '_downloads'
@@ -65,7 +64,12 @@ if __name__ == '__main__':
             writers.store_screen_result(QVM, RESULT_DIR, f"{name}_QVM")
 
             # Custom screen - retults screened in order
-            custom_screen = screen_styles.custom_screen(df, screens=['cash_rich', 'quality', 'value', 'dividend']).sort_values(by='Dividend yield', ascending=False)
+            custom_screen = screen_styles.custom_screen(
+                df,
+                screens=[
+                    'cash_rich', 'quality', 'value', 'dividend'
+                ]
+            ).sort_values(by='Dividend yield', ascending=False)
             writers.store_screen_result(custom_screen, RESULT_DIR, f"{name}_custom_screen")
 
             # If we have processed the latest data, keep note of this
