@@ -6,18 +6,6 @@ CURRENCIES = {
 }
 
 
-def filter_unwanted_industries(df):
-    # Remove utilities and finance
-    finance_and_utilities = ['ALTERNATIVE ENERGY', 'OIL & GAS PRODUCERS',
-    'EQUITY INVESTMENT INSTRUMENTS', 'REAL ESTATE INVESTMENT & SERVICES',
-    'GENERAL FINANCIAL', 'ELECTRICITY', 'REAL ESTATE INVESTMENT TRUSTS',
-    'GAS WATER & UTILITIES', 'NONLIFE INSURANCE',
-    'NONEQUITY INVESTMENT INSTRUMENTS', 'LIFE INSURANCE',
-    'FIXED LINE TELECOMMUNICATIONS', 'BANKS', 'OIL EQUIPMENT SERVICES & DISTRIBUTION']
-    df = df[~df['Industry name'].isin(finance_and_utilities)]
-    return df
-
-
 def filter_non_british_currency(df):
     return df[df['Price currency'].isin(CURRENCIES.keys())]
 
@@ -26,7 +14,7 @@ def filter_unfavourable_dividend_yield(df):
     def _filter_div(x):
         if pd.isnull(x):
             return True
-        elif x <= 15:
+        elif 0 < x <= 15:
             return True
         else:
             return False

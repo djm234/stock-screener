@@ -10,18 +10,18 @@ def return_max(df):
 def magic_formula(df):
     # Greenblatts Magic Formula
     # Sort by earnings yield and calculate rank
-    df = df.sort_values(by='Earnings Yield', ascending = False)
-    df['earnings_rank_percentile'] = [(i/len(df))*100 for i in range(1,len(df)+1)]
+    df = df.sort_values(by='Earnings Yield', ascending=True)
+    df['earnings_rank_percentile'] = percentile_list(len(df), ascending=True)
     # Same for ROI (ROIC)
-    df = df.sort_values(by='ROI', ascending = False)
-    df['ROI_rank_percentile'] = [(i/len(df))*100 for i in range(1,len(df)+1)]
+    df = df.sort_values(by='ROI', ascending=True)
+    df['ROI_rank_percentile'] = percentile_list(len(df), ascending=True)
     # Sum ranks of percentiles - those at top are highest ranks
     df['magic formula score'] = df['earnings_rank_percentile'] + df['ROI_rank_percentile']
-    df = df.sort_values(by='magic formula score', ascending=True)
-    df['MF rank'] = [i for i in range(1,len(df)+1)]
+    df = df.sort_values(by='magic formula score', ascending=False)
+    df['MF rank'] = percentile_list(len(df), ascending=True)
     # Clean up
     df = df.drop(['earnings_rank_percentile', 'ROI_rank_percentile'], axis=1)
-    return df
+    return df.sort_values(by='MF rank', ascending=True)
 
 
 def z_score(df):
@@ -65,12 +65,12 @@ def f_score(df):
         score = 0
         if row['Net Income Of Revenues(%)']>0:
             score += 1
-        if row['Return On Assets (%)']>0:
-            score += 1
         if row['Operations (m)']>0:
             score += 1
-        if row['Total assets (m)'] < 0:
-            if (row['Operations (m)']/row['Total assets (m)']) > row['Return On Assets (%)']:
+        if row['Return On Assets (%)']>0:
+            score += 1
+        if row['Total assets (m)'] > 0:
+            if row['Operations (m)'] > row['Net Income Of Revenues(%)']:
                 score += 1
         # Estimate Point 6
         if row['Current ratio'] >= 1.5:
@@ -97,7 +97,7 @@ def pence_to_pounds(df):
     return df
 
 
-def long_term_momentum(df):
+def long_term_momentum(df, tidy=True):
 
     def _linregress(row):
         x = [0, 90, 180, 365, 365*3, 365*5]
@@ -117,8 +117,9 @@ def long_term_momentum(df):
     # greatest positive R2 score indicates upward consistent trend
     df = df.sort_values(by=['r_value', 'slope'], ascending=[False, False])
     df['lt_momentum_score'] = percentile_list(len(df))
-    del df['r_value']
-    del df['slope']
+    if tidy:
+        del df['r_value']
+        del df['slope']
     return df
 
 
@@ -147,5 +148,8 @@ def short_term_momentum(df):
     return df
 
 
-def percentile_list(n_items):
-    return np.linspace(100, 0, n_items)
+def percentile_list(n_items, ascending=False):
+    if ascending:
+        return np.around(np.linspace(0, 100, n_items), decimals=2)
+    else:
+        return np.around(np.linspace(100, 0, n_items), decimals=2)
