@@ -18,9 +18,9 @@ def magic_formula(df):
     # Sum ranks of percentiles - those at top are highest ranks
     df['magic formula score'] = df['earnings_rank_percentile'] + df['ROI_rank_percentile']
     df = df.sort_values(by='magic formula score', ascending=False)
-    df['MF rank'] = percentile_list(len(df), ascending=True)
+    df['MF rank'] = range(1, len(df)+1)
     # Clean up
-    df = df.drop(['earnings_rank_percentile', 'ROI_rank_percentile'], axis=1)
+    #df = df.drop(['earnings_rank_percentile', 'ROI_rank_percentile'], axis=1)
     return df.sort_values(by='MF rank', ascending=True)
 
 

@@ -51,10 +51,6 @@ if __name__ == '__main__':
             quality_screen = screen_styles.quality_screener(df)
             writers.store_screen_result(quality_screen, RESULT_DIR, f"{name}_quality_screen")
 
-            # Stable increase in price
-            stability_screen = screen_styles.stability_screener(df)
-            writers.store_screen_result(stability_screen, RESULT_DIR, f"{name}_stability_screen")
-
             # Cash rich
             cash_rich_screen = screen_styles.cash_rich_screener(df)
             writers.store_screen_result(cash_rich_screen, RESULT_DIR, f"{name}_cash_rich_screen")
@@ -81,7 +77,6 @@ if __name__ == '__main__':
                     'magic_formula_screen': magic_formula_screen,
                     'momentum_screen': momentum_screen,
                     'quality_screen': quality_screen,
-                    'stability_screen': stability_screen,
                     'cash_rich_screen': cash_rich_screen,
                     'QVM': QVM,
                     'custom': custom_screen,

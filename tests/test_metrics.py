@@ -61,7 +61,7 @@ def test_magic_formula():
     assert_that(
         result['MF rank'].tolist(),
         equal_to(
-            [0.0, 33.33, 66.67, 100.0]
+            [1, 2, 3, 4]
         )
     )
 
