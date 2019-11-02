@@ -1,6 +1,9 @@
 # stock-screener
 A package that enables screening to UK stocks using data downloaded from ADVFN.
 
+### Warning
+This tool should be used only for research purposes, and not as financial advice.
+
 ## Features
 This tool calculates metrics such as Z-score, Greenblatt's Magic Formula, and F score (approximation), then uses this data together with other metrics obtained from ADVFN to filter stocks.
 
