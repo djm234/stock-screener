@@ -52,7 +52,7 @@ if screen_choice == 'custom':
             'value',
             'momentum',
             'dividend',
-            'magic formula',
+            'magic_formula',
         ]
     )
     custom_screen = partial(screen_styles.custom_screen, screens=custom_choices)
